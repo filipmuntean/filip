@@ -1,0 +1,22 @@
+---
+title: CEUR-WS Workshops Submission Page
+description: Submission page of the proceedings
+repository: 
+url: 
+date: 2024-08-01
+published: true
+---
+
+
+- Developed a Django-based UI to streamline the submission process for CEUR-WS proceedings. 
+
+- Created a user interface using Django that allows workshop organizers to manually input workshop metadata, which is stored and displayed for later review and editing.
+-  Authors receive a private URL to upload papers, with fields prefilled from extracted PDF metadata.
+
+- Developed features to double-check data accuracy, such as verifying if licensing agreements are uploaded and hand-signed.
+- Developed reaordering sessions within a workshop as well as papers within a session.
+- Integrated the OpenReview API to retrieve and parse metadata for publications. Implemented a mechanism to scrape unique OpenReview IDs for batch publications.
+- Added a workflow for users to search and select existing workshops on OpenReview, pre-populating workshop metadata and author information in the UI. This minimized manual input errors and streamlined the process for users familiar with OpenReview.
+- Implemented a structured JSON output for both organizers and authors to capture detailed metadata.
+- Designed a process to convert JSON metadata into HTML adhering to the structure used on the [CEUR-WS](https://ceur-ws.org/) website. Implemented a static page generator to render HTML files on the Apache server, allowing easy access and publication of workshop information.
+
