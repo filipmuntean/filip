@@ -4,7 +4,7 @@ import Particles from "./components/particles";
 
 const navigation = [
   // { name: "Home", href: "/" },
-  { name: "CV", href: "https://filipmuntean.github.io/shiny-octo-bassoon/cv.pdf" },
+  // { name: "CV", href: "https://filipmuntean.github.io/shiny-octo-bassoon/cv.pdf" },
   { name: "Projects", href: "/projects" },
   { name: "Contact", href: "/contact" },
 ];
