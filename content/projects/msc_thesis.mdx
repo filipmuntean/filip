@@ -1,12 +1,31 @@
 ---
-title: MSc Thesis @TNO
-description: My master's thesis explores dark patterns in chatbot behaviours
+title: Modeling AI-Driven Persuasion: Personality-Aware Belief Shifts in Conversational Agents
+description: MSc Thesis @TNO
 date: 2025-07-01
 repository: 
 published: true
 ---
 
-As part of my MSc in Artificial Intelligence at VU Amsterdam, I conducted my thesis research in collaboration with TNO (The Netherlands Organisation for Applied Scientific Research). My work investigates dark patterns in chatbot behaviour. 
+As part of my MSc in Artificial Intelligence at VU Amsterdam, I conducted my thesis research in collaboration with TNO (The Netherlands Organisation for Applied Scientific Research). The goal of the project was to simulate conversations between simulated AI actors and study how persuasive messages influenced opinions over time.
 
-TO BE CONTINUED
+## ✨ My Tasks Involved:
+
+The project built upon a custom-developed **simulation environment** built using **FastAPI** and **Vite**, designed to support dynamic interactions between agents and real-time monitoring of conversation flows.
+
+### 🔧 Simulation Environment 
+
+- ⚙️ **FastAPI Backend** to handle agent logic, simulation events, and message flow
+- ⚡ **Vite Frontend**: A reactive UI to manually steer simulations, inspect message threads, and visualize agent interactions in real time.
+- 🔁 **Asynchronous Message Loop**: Enabled conversational agents to respond sequentially in structured multi-turn conversations.
+- 📝 **Live Logging & Persistence**: Conversations and metadata are stored during each session to enable reproducible analysis and evaluation.
+
+### ✨ Thesis Contributions
+
+Building on top of this environment, my thesis focused on simulating **belief shifts** in conversations between receiving and perceiving agents using **large language models**.
+
+- 🧠 **Agent Design**: Modeled receiving agents using Big Five personality traits and belief systems, and perceiving agents based on persuasive strategies (Logos, Pathos, Ethos).
+- 🤖 **LLM-Driven Dialogue**: Integrated GPT-based agents to simulate psychologically grounded persuasion scenarios.
+- 📈 **Belief Shift Tracking**: Measured endorsement changes using **G-eval** and tracked **sentiment evolution** with the **AFINN lexicon**.
+- 🔬 **Reasoning Analysis**: Used **FLAN-T5** for classifying types of persuasive reasoning across dialogues.
+- 🧪 **Batch Simulation & Logging**: Ran experiments across agent pairings and message lengths, logging all outputs for structured analysis.
 
