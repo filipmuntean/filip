@@ -60,6 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
       <head>
+        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="e0b5fdf0-ded1-4ee6-b59d-150e1b0fc8b9" type="text/javascript" async></script>
         {/* <Analytics /> */}
       </head>
       <body
