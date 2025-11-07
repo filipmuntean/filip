@@ -44,7 +44,7 @@ export default function Home() {
             className="underline duration-500 hover:text-zinc-300"
           >
             VU
-          </Link> and software developer. 
+          </Link> and software developer.
         </h2>
       </div>
     </div>
