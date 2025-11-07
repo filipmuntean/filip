@@ -5,6 +5,7 @@ import Particles from "./components/particles";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Projects", href: "/projects" },
+  { name: "Blog", href: "https://blog-git-main-filip-munteans-projects.vercel.app/" },
   { name: "Contact", href: "/contact" },
 ];
 
