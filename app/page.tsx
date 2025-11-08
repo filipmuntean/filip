@@ -6,6 +6,7 @@ const navigation = [
   { name: "Home", href: "/" },
   // { name: "CV", href: "https://filipmuntean.github.io/shiny-octo-bassoon/cv.pdf" },
   { name: "Projects", href: "/projects" },
+  { name: "Blog", href: "https://blog-ten-pi-31.vercel.app/" },
   { name: "Contact", href: "/contact" },
   { name: "Misc", href: "/misc" },
 
@@ -48,17 +49,6 @@ export default function Home() {
             VU
           </Link> and software developer. 
         </h2>
-        
-        <div className="mt-8 space-y-2">
-          <h3 className="text-xs text-zinc-400 uppercase tracking-wider">Languages</h3>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-zinc-500">
-            <span>Romanian (Native)</span>
-            <span>French (Native)</span>
-            <span>English (C2)</span>
-            <span>Spanish (B2)</span>
-            <span>Dutch (A2)</span>
-          </div>
-        </div>
       </div>
     </div>
   );

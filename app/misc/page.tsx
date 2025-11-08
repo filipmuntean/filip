@@ -101,23 +101,23 @@ export default function MiscPage() {
 									<tbody>
 										<tr className="border-b border-zinc-800">
 											<td className="py-2 pr-4 text-zinc-400">Romanian</td>
-											<td className="py-2 text-zinc-400">-</td>
-										</tr>
-										<tr className="border-b border-zinc-800">
-											<td className="py-2 pr-4 text-zinc-400">English</td>
-											<td className="py-2 text-zinc-400">-</td>
+											<td className="py-2 text-zinc-400">Native</td>
 										</tr>
 										<tr className="border-b border-zinc-800">
 											<td className="py-2 pr-4 text-zinc-400">French</td>
-											<td className="py-2 text-zinc-400">-</td>
+											<td className="py-2 text-zinc-400">Native</td>
+										</tr>
+										<tr className="border-b border-zinc-800">
+											<td className="py-2 pr-4 text-zinc-400">English</td>
+											<td className="py-2 text-zinc-400">C2</td>
 										</tr>
 										<tr className="border-b border-zinc-800">
 											<td className="py-2 pr-4 text-zinc-400">Spanish</td>
-											<td className="py-2 text-zinc-400">-</td>
+											<td className="py-2 text-zinc-400">B2</td>
 										</tr>
 										<tr>
 											<td className="py-2 pr-4 text-zinc-400">Dutch</td>
-											<td className="py-2 text-zinc-400">-</td>
+											<td className="py-2 text-zinc-400">A2</td>
 										</tr>
 									</tbody>
 								</table>
