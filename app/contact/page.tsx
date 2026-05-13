@@ -1,61 +1,148 @@
 "use client";
-import { Github, Mail, Linkedin } from "lucide-react";
 import Link from "next/link";
+import { Github, Linkedin } from "lucide-react";
 import { Navigation } from "../components/nav";
-import { Card } from "../components/card";
+import { useState } from "react";
 
-const socials = [
-	{
-		icon: <Linkedin size={20} />,
-		href: "https://www.linkedin.com/in/filip-muntean-54bb247b/",
-		label: "LinkedIn",
-		handle: "Filip Muntean",
-	},
-	{
-		icon: <Mail size={20} />,
-		href: "mailto:filipmorris@duck.com",
-		label: "Email",
-		handle: "filipmorris@duck.com",
-	},
-	{
-		icon: <Github size={20} />,
-		href: "https://github.com/filipmuntean",
-		label: "Github",
-		handle: "filipmuntean",
-	},
-];
+type FormState = "idle" | "submitting" | "success" | "error";
 
-export default function Example() {
+export default function Contact() {
+	const [state, setState] = useState<FormState>("idle");
+
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		setState("submitting");
+
+		const form = e.currentTarget;
+		const data = {
+			name: (form.elements.namedItem("name") as HTMLInputElement).value,
+			email: (form.elements.namedItem("email") as HTMLInputElement).value,
+			message: (form.elements.namedItem("message") as HTMLTextAreaElement)
+				.value,
+		};
+
+		try {
+			const res = await fetch(
+				`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/json",
+					},
+					body: JSON.stringify(data),
+				},
+			);
+			if (res.ok) {
+				setState("success");
+			} else {
+				setState("error");
+			}
+		} catch {
+			setState("error");
+		}
+	}
+
 	return (
-		<div className=" bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
+		<div className="bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
 			<Navigation />
 			<div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
-				<div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-3 lg:gap-16">
-					{socials.map((s) => (
-						<Card>
-							<Link
-								href={s.href}
-								target="_blank"
-								className="p-4 relative flex flex-col items-center gap-4 duration-700 group md:gap-8 md:py-24  lg:pb-48  md:p-16"
-							>
-								<span
-									className="absolute w-px h-2/3 bg-gradient-to-b from-zinc-500 via-zinc-500/50 to-transparent"
-									aria-hidden="true"
-								/>
-								<span className="relative z-10 flex items-center justify-center w-12 h-12 text-sm duration-1000 border rounded-full text-zinc-200 group-hover:text-white group-hover:bg-zinc-900 border-zinc-500 bg-zinc-900 group-hover:border-zinc-200 drop-shadow-orange">
-									{s.icon}
-								</span>{" "}
-								<div className="z-10 flex flex-col items-center">
-									<span className="lg:text-xl font-medium duration-150 xl:text-3xl text-zinc-200 group-hover:text-white font-display">
-										{s.handle}
-									</span>
-									<span className="mt-4 text-sm text-center duration-1000 text-zinc-400 group-hover:text-zinc-200">
-										{s.label}
-									</span>
+				<div className="w-full max-w-md mx-auto mt-32 sm:mt-0">
+					{state === "success" ? (
+						<div className="text-center py-16">
+							<p className="text-zinc-200 text-lg font-medium">Message sent!</p>
+							<p className="text-zinc-500 text-sm mt-2">
+								I'll be in touch soon.
+							</p>
+						</div>
+					) : (
+						<>
+							<div className="text-center mb-8">
+								<h1 className="text-white text-2xl font-semibold tracking-tight mb-2 font-display">
+									Say hello
+								</h1>
+								<p className="text-zinc-500 text-sm leading-relaxed">
+									Open to new opportunities, collaborations,
+									<br />
+									and interesting conversations.
+								</p>
+							</div>
+
+							<form onSubmit={handleSubmit} className="flex flex-col gap-3">
+								<div className="grid grid-cols-2 gap-3">
+									<input
+										name="name"
+										type="text"
+										placeholder="Name"
+										required
+										disabled={state === "submitting"}
+										className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-700 disabled:opacity-50"
+									/>
+									<input
+										name="email"
+										type="email"
+										placeholder="Email"
+										required
+										disabled={state === "submitting"}
+										className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-700 disabled:opacity-50"
+									/>
 								</div>
-							</Link>
-						</Card>
-					))}
+								<textarea
+									name="message"
+									placeholder="What's on your mind?"
+									required
+									rows={5}
+									disabled={state === "submitting"}
+									className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-700 disabled:opacity-50 resize-none"
+								/>
+
+								<button
+									type="submit"
+									disabled={state === "submitting"}
+									className="w-full bg-white text-black text-sm font-semibold py-3 rounded-full hover:bg-zinc-200 duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+								>
+									{state === "submitting" ? "Sending…" : "Send message →"}
+								</button>
+
+								{state === "error" && (
+									<p className="text-center text-xs text-red-400">
+										Something went wrong. Try emailing me directly.
+									</p>
+								)}
+							</form>
+
+							<div className="text-center mt-4">
+								<span className="text-zinc-500 text-sm">or email me at </span>
+								<a
+									href="mailto:filipmorris@duck.com"
+									className="text-zinc-400 text-sm underline underline-offset-2 hover:text-zinc-200 duration-300"
+								>
+									filipmorris@duck.com
+								</a>
+							</div>
+
+							<div className="border-t border-zinc-800 mt-6 pt-6 flex justify-center gap-6">
+								<Link
+									href="https://www.linkedin.com/in/filip-muntean-54bb247b/"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 duration-300"
+								>
+									<Linkedin size={14} />
+									LinkedIn
+								</Link>
+								<Link
+									href="https://github.com/filipmuntean"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 duration-300"
+								>
+									<Github size={14} />
+									GitHub
+								</Link>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</div>
