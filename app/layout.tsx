@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import LocalFont from "next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://filipmuntean.vercel.app/'),
@@ -69,6 +70,10 @@ export default function RootLayout({
       >
         {children}
         <Analytics />
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

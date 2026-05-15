@@ -2,15 +2,67 @@
 import Link from "next/link";
 import { Github, Linkedin } from "lucide-react";
 import { Navigation } from "../components/nav";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+
+declare global {
+	interface Window {
+		turnstile: {
+			render(container: HTMLElement, options: TurnstileOptions): string;
+			reset(widgetId: string): void;
+			remove(widgetId: string): void;
+		};
+		onTurnstileLoad?: () => void;
+	}
+}
+
+interface TurnstileOptions {
+	sitekey: string;
+	theme?: "light" | "dark" | "auto";
+	callback?: (token: string) => void;
+	"expired-callback"?: () => void;
+	"error-callback"?: () => void;
+}
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
 export default function Contact() {
 	const [state, setState] = useState<FormState>("idle");
+	const [token, setToken] = useState<string | null>(null);
+	const widgetId = useRef<string | null>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		function renderWidget() {
+			if (!containerRef.current || widgetId.current) return;
+			widgetId.current = window.turnstile.render(containerRef.current, {
+				sitekey:
+					process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ??
+					"1x00000000000000000000AA",
+				theme: "dark",
+				callback: (t) => setToken(t),
+				"expired-callback": () => setToken(null),
+				"error-callback": () => setToken(null),
+			});
+		}
+
+		if (window.turnstile) {
+			renderWidget();
+		} else {
+			window.onTurnstileLoad = renderWidget;
+		}
+
+		return () => {
+			if (widgetId.current) {
+				window.turnstile?.remove(widgetId.current);
+				widgetId.current = null;
+			}
+			delete window.onTurnstileLoad;
+		};
+	}, []);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		if (!token) return;
 		setState("submitting");
 
 		const form = e.currentTarget;
@@ -37,9 +89,13 @@ export default function Contact() {
 				setState("success");
 			} else {
 				setState("error");
+				setToken(null);
+				if (widgetId.current) window.turnstile?.reset(widgetId.current);
 			}
 		} catch {
 			setState("error");
+			setToken(null);
+			if (widgetId.current) window.turnstile?.reset(widgetId.current);
 		}
 	}
 
@@ -96,9 +152,11 @@ export default function Contact() {
 									className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-700 disabled:opacity-50 resize-none"
 								/>
 
+								<div ref={containerRef} className="flex justify-center" />
+
 								<button
 									type="submit"
-									disabled={state === "submitting"}
+									disabled={!token || state === "submitting"}
 									className="w-full bg-white text-black text-sm font-semibold py-3 rounded-full hover:bg-zinc-200 duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									{state === "submitting" ? "Sending…" : "Send message →"}
