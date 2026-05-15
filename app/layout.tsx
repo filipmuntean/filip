@@ -11,11 +11,10 @@ export const metadata: Metadata = {
     default: "Filip Muntean",
     template: "%s | filipmuntean.com",
   },
-  description: "Second year AI MSc student and software developer",
+  description: "AI Engineer",
   openGraph: {
     title: "Filip Muntean",
-    description:
-      "Second year AI MSc student and software developer",
+    description: "AI Engineer",
     url: "https://filipmuntean.com",
     siteName: "filipmuntean.com",
     images: [
