@@ -13,7 +13,7 @@ export default function About() {
 					<p className="text-zinc-400 mb-8">A bit about me.</p>
 					<div className="space-y-4 text-zinc-400 leading-relaxed">
 						<p>
-							I'm Filip, an AI Engineer based in Amsterdam. I recently completed my MSc in Artificial Intelligence at VU Amsterdam, where my research focused on simulating persuasion dynamics using large language models — work that was published at LREC-COLING 2025.
+							I'm Filip, an AI Engineer based in Amsterdam. I recently completed my MSc in Artificial Intelligence at VU Amsterdam, where my research focused on simulating persuasion dynamics using LLMs — work that was published at LREC 2026 in Palma de Mallorca.
 						</p>
 						<p>
 							My background sits at the intersection of NLP, agent-based systems, and full-stack engineering. I enjoy building things that are both technically rigorous and actually useful.
@@ -23,38 +23,11 @@ export default function About() {
 
 				<section className="mb-16">
 					<h2 className="text-2xl font-bold tracking-tight text-zinc-100 mb-6">
-						Presentations & Volunteering
+						Volunteering
 					</h2>
 
 					<div className="space-y-8">
 						<div>
-							<h3 className="text-lg font-semibold text-zinc-200 mb-4">Conferences and Seminars</h3>
-							<div className="border-l-2 border-zinc-700 pl-4 space-y-4">
-								<div>
-									<div className="flex justify-between items-start mb-1">
-										<h4 className="font-medium text-zinc-100">VU AI in Education</h4>
-										<span className="text-sm text-zinc-500">16/04/2025</span>
-									</div>
-									<p className="text-sm text-zinc-500 mb-1">Amsterdam, The Netherlands</p>
-									<p className="text-zinc-400 text-sm">
-										Presented the Rolo-Tutor chatbot project and its contribution to educational activities within courses at VU.
-									</p>
-								</div>
-								<div>
-									<div className="flex justify-between items-start mb-1">
-										<h4 className="font-medium text-zinc-100">Kooy Symposium 2025</h4>
-										<span className="text-sm text-zinc-500">16/04/2025</span>
-									</div>
-									<p className="text-sm text-zinc-500 mb-1">Stroe, The Netherlands</p>
-									<p className="text-zinc-400 text-sm">
-										Presented a demo of the simulation tool and research progress made at TNO in the context of my MSc thesis.
-									</p>
-								</div>
-							</div>
-						</div>
-
-						<div>
-							<h3 className="text-lg font-semibold text-zinc-200 mb-4">Volunteering</h3>
 							<div className="border-l-2 border-zinc-700 pl-4 space-y-6">
 								<div>
 									<div className="flex justify-between items-start mb-1">
