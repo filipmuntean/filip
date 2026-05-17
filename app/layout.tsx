@@ -6,7 +6,7 @@ import { Analytics } from "./components/analytics";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://filipmuntean.vercel.app/'),
+  metadataBase: new URL('https://filipmuntean.com/'),
   title: {
     default: "Filip Muntean",
     template: "%s | filipmuntean.com",
