@@ -8,7 +8,7 @@ const navigation = [
   // { name: "Blog", href: "https://blog-ten-pi-31.vercel.app/" },
   { name: "Publications", href: "/publications" },
   { name: "Contact", href: "/contact" },
-  { name: "Misc", href: "/misc" },
+  { name: "About", href: "/about" },
 ];
 
 export default function Home() {
