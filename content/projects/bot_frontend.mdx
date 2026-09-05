@@ -1,22 +1,61 @@
 ---
-title: Rolo Tutor 
-description: 🚀 Chatbot for Education 📚
+title: Rolo Tutor
+description: AI teaching assistant for introductory Python at VU Amsterdam
 date: 2024-11-17
 repository: 
 url: https://rolo-frontend-506573180721.europe-west1.run.app/
-published: false
+published: true
 ---
 
-I have developed the front end for the **Rolo-Tutor Project** 🤖, a chatbot-based educational tool designed to teach **Python** 🐍 using **React** ⚛️ and **Chart.js** 📊 among other technologies.
+<img src="/rolo/login.png" alt="Rolo Tutor landing page with VU branding, the Rolo mascot, and VU-email sign-in" />
 
-## ✨ My Tasks Involve:
+Rolo Tutor is an AI teaching assistant built for Vrije Universiteit Amsterdam. It teaches introductory Python instead of handing out answers — the tagline we settled on was **"Designed to Teach, not Answer."** Students reach it outside class hours, either on the web or through the course Discord server, and we presented it at a VU educational-technology conference.
 
-- 🔑 **Microsoft OAuth 2.0 Integration**: Implementing user authentication using Microsoft OAuth 2.0 to ensure secure access to the chatbot for authenticated users only.
-- 🎨 **User-Friendly Interface**: Building a dynamic, interactive UI, including modal forms for student feedback submission.
-- 📊 **Developer Dashboard**: Creating a dashboard to help developers visualize and analyze student feedback effectively.
-    - 🔍 **Topic Clustering**: Grouping related questions into clusters, visualized in a **bubble chart** 🫧 that users can click to explore further.
-    - 📈 **Traffic & Message Analytics**: Using [Chart.js](https://www.chartjs.org/) to display **web app and Discord traffic trends**, including the number of messages exchanged per day.
-- 🚀 **CI/CD Pipeline**: Implementing a **continuous integration and deployment (CI/CD) pipeline** that **automatically deploys** both the backend and frontend to **Google Cloud Platform** ☁️ whenever a new version is pushed to the **main branch**.
-- 🐳 **Deployment**: Hosting the web app on **Google Cloud Platform** using **Docker** 🏗️ for scalable and efficient containerized deployment.
+## Teaching, not answering
 
----
+<img src="/rolo/chat-conversation.png" alt="Rolo Tutor answering how to reverse a list in Python with three methods and runnable examples" />
+
+Asked how to reverse a list in Python, the tutor walks through three methods with runnable examples and closes with a short summary of which one to reach for, rather than dropping a single snippet. Every reply carries thumbs up / down controls, and the verdict goes straight to the database where the dashboard picks it up.
+
+## Architecture
+
+Four services in one monorepo.
+
+**rolo-frontend** — React 18 (CRA with CRACO path aliases) and React Router 6. Sign-in is Microsoft Entra ID / OAuth 2.0 via `@azure/msal-browser` and `@azure/msal-react`, restricted to `@vu.nl` and `@student.vu.nl` addresses. The chat renders with a typewriter effect and full Markdown + GFM through `react-markdown` and `remark-gfm`, so code blocks, tables and lists come out properly. Bootstrap 5, MUI and Emotion for the shell, Quicksand for type.
+
+**rolo-backend** — a Node/Express API on Google Cloud Run.
+
+- `POST /api/google-chat` — Gemini 2.5 Flash via `@google/generative-ai`, replaying the user's full prior conversation as context so the tutor remembers the thread.
+- `POST /api/chat` — the earlier OpenAI Assistants implementation, behind the same request shape.
+- `POST /api/cluster` — topic clustering. A 3072-dimension embedding per student question, cached in a `question_embeddings` table, then k-means (k=5) via `ml-kmeans` with drill-down into sub-clusters. Around 200 questions cluster in about 8 seconds from cache.
+- `POST /api/executeQuery` — a parameterised query layer.
+
+Storage is Neon serverless PostgreSQL: web conversations, Discord conversations, and the embedding cache.
+
+**rolo-discord** — a Discord.js bot with slash commands, automatic threading per question, button interactions, and a sweep for unanswered questions. It writes to the same database, so web and Discord traffic sit side by side in the dashboard.
+
+**rolo-tutor** — the original Flask prototype the Node stack grew out of: OpenAI Assistants API, syntax highlighting, MongoDB persistence, and an optional local Ollama backend.
+
+## The dashboard
+
+<img src="/rolo/dashboard-full.png" alt="Full Rolo Tutor developer dashboard including the topic-clustering bubble chart" />
+
+The dashboard is the part I care most about, because it is what turns a chat log into something a course team can act on.
+
+The **feedback table** lists every message with its source (Web App or Discord), the thumbs verdict and a timestamp — sortable, paginated, and exportable to CSV. **Message Count Over Time** and **Traffic Over Time** are Chart.js with `chartjs-plugin-zoom`, splitting web-app against Discord-bot volume and showing unique users per day.
+
+The **topic clustering** bubble chart groups questions by embedding similarity, with bubble area standing in for cluster size. Clicking a bubble opens the questions inside it, or drills into sub-clusters — so "what is the cohort actually stuck on this week" is a couple of clicks rather than a query.
+
+<img src="/rolo/dashboard.png" alt="Dashboard above the fold: feedback table with CSV export and both traffic charts" />
+
+## Delivery
+
+The frontend (behind nginx) and the backend are both Dockerised, with CI/CD to GCP: a push to `main` builds and deploys both services to Cloud Run automatically.
+
+## My role
+
+I built the front end end-to-end — auth, chat UI, feedback capture, and the whole dashboard — along with the Node backend endpoints behind it, the CI/CD pipeline, and the GCP deployment.
+
+<img src="/rolo/chat.png" alt="Empty chat state in Rolo Tutor" />
+
+The live deployment sits behind VU single sign-on, so the screenshots here come from a local run.
