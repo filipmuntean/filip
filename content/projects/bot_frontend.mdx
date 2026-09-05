@@ -44,9 +44,27 @@ The dashboard is the part I care most about, because it is what turns a chat log
 
 The **feedback table** lists every message with its source (Web App or Discord), the thumbs verdict and a timestamp — sortable, paginated, and exportable to CSV. **Message Count Over Time** and **Traffic Over Time** are Chart.js with `chartjs-plugin-zoom`, splitting web-app against Discord-bot volume and showing unique users per day.
 
-The **topic clustering** bubble chart groups questions by embedding similarity, with bubble area standing in for cluster size. Clicking a bubble opens the questions inside it, or drills into sub-clusters — so "what is the cohort actually stuck on this week" is a couple of clicks rather than a query.
-
 <img src="/rolo/dashboard.png" alt="Dashboard above the fold: feedback table with CSV export and both traffic charts" />
+
+### Topic clustering, two levels deep
+
+The bubble chart groups questions by embedding similarity, with bubble area standing in for cluster size. Each cluster is labelled by a representative question, so hovering gives you the topic and its volume at a glance.
+
+<img src="/rolo/clustering-level1.png" alt="Level one bubble chart, tooltip reading Cluster How to implement security in web applications: 67 questions" />
+
+Clicking a bubble asks what you want from it: read the questions, or go a level deeper.
+
+<img src="/rolo/clustering-actions.png" alt="Clicking a cluster offers View Questions or Go to Subclusters" />
+
+**View Questions** lists everything in that cluster verbatim — the raw student phrasing, not a summary of it.
+
+<img src="/rolo/clustering-questions.png" alt="Modal listing the individual questions inside one cluster" />
+
+**Go to Subclusters** re-runs k-means inside the cluster alone and redraws the chart against its members, so a broad topic breaks into the specific things students got stuck on. From there you can open questions per sub-cluster, or step back up.
+
+<img src="/rolo/clustering-level2.png" alt="Level two bubble chart of sub-clusters with a Back to Previous Level button" />
+
+The point is that "what is the cohort actually stuck on this week" is a couple of clicks, not a query.
 
 ## Delivery
 
