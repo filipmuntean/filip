@@ -30,7 +30,7 @@ Four services in one monorepo.
 - `POST /api/cluster` — topic clustering. A 3072-dimension embedding per student question, cached in a `question_embeddings` table, then k-means (k=5) via `ml-kmeans` with drill-down into sub-clusters. Around 200 questions cluster in about 8 seconds from cache.
 - `POST /api/executeQuery` — a parameterised query layer.
 
-Storage is Neon serverless PostgreSQL: web conversations, Discord conversations, and the embedding cache.
+Storage is Google BigQuery: web conversations, Discord conversations, and the embedding cache.
 
 **rolo-discord** — a Discord.js bot with slash commands, automatic threading per question, button interactions, and a sweep for unanswered questions. It writes to the same database, so web and Discord traffic sit side by side in the dashboard.
 
