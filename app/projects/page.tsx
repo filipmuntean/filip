@@ -7,6 +7,11 @@ import { Article } from "./article";
 import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
 
+export const metadata = {
+  title: "Projects",
+  description: "Things Filip Muntean has built, at work and on his own time.",
+};
+
 const redis = Redis.fromEnv();
 
 export const revalidate = 60;
@@ -20,17 +25,14 @@ export default async function ProjectsPage() {
     return acc;
   }, {} as Record<string, number>);
 
-  const featured = allProjects.find((project) => project.slug === "msc_thesis")!;
-  const top2 = allProjects.find((project) => project.slug === "django")!;
-  const top3 = allProjects.find((project) => project.slug === "bot_frontend")!;
+  // ponytail: a renamed slug drops out of the hero instead of crashing the page
+  const heroSlugs = ["msc_thesis", "c4fairness", "django"];
+  const [featured, ...rest] = heroSlugs
+    .map((slug) => allProjects.find((p) => p.slug === slug && p.published))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
   const sorted = allProjects
     .filter((p) => p.published)
-    .filter(
-      (project) =>
-        project.slug !== featured.slug &&
-        project.slug !== top2.slug &&
-        project.slug !== top3.slug,
-    )
+    .filter((project) => !heroSlugs.includes(project.slug))
     .sort(
       (a, b) =>
         new Date(b.date ?? Number.POSITIVE_INFINITY).getTime() -
@@ -52,6 +54,7 @@ export default async function ProjectsPage() {
         <div className="w-full h-px bg-zinc-800" />
 
         <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
+          {featured && (
           <Card>
             <Link href={`/projects/${featured.slug}`}>
               <article className="relative w-full h-full p-4 md:p-8">
@@ -92,9 +95,10 @@ export default async function ProjectsPage() {
               </article>
             </Link>
           </Card>
+          )}
 
           <div className="flex flex-col w-full gap-8 mx-auto border-t border-gray-900/10 lg:mx-0 lg:border-t-0 ">
-            {[top2, top3].map((project) => (
+            {rest.map((project) => (
               <Card key={project.slug}>
                 <Article project={project} views={views[project.slug] ?? 0} />
               </Card>

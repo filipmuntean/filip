@@ -24,6 +24,12 @@ export async function generateStaticParams(): Promise<Props["params"][]> {
     }));
 }
 
+export function generateMetadata({ params }: Props) {
+  const project = allProjects.find((p) => p.slug === params?.slug);
+  if (!project) return {};
+  return { title: project.title, description: project.description };
+}
+
 export default async function PostPage({ params }: Props) {
   const slug = params?.slug;
   const project = allProjects.find((project) => project.slug === slug);
