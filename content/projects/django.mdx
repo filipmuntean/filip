@@ -1,22 +1,58 @@
 ---
 title: CEUR-WS Workshops Submission Page
-description: Submission page of the proceedings
-repository: 
+description: Django submission pipeline that turns workshop metadata into a publish-ready CEUR-WS volume
+repository: ceurws/ceur-ws-prototype
 url: https://krr.cs.vu.nl/ceur-beta/workshops/
 date: 2024-08-01
 published: true
 ---
 
+<img src="/ceur-ws-prototype/overview.png" alt="Workshop overview page listing the volume's metadata, its two editors, and three accepted papers grouped into two sessions, each marked complete with a green tick" />
 
-- Developed a Django-based UI to streamline the submission process for CEUR-WS proceedings. 
+CEUR-WS.org publishes open-access proceedings for academic workshops, and for years the intake was email plus hand-written HTML. This is the Django app that replaces it, built at Vrije Universiteit Amsterdam with Hein Kolk. A volume editor describes the workshop once, authors upload their own papers, and the app emits the metadata, the zipped files and the volume index page that CEUR-WS publishes.
 
-- Created a user interface using Django that allows workshop organizers to manually input workshop metadata, which is stored and displayed for later review and editing.
--  Authors receive a private URL to upload papers, with fields prefilled from extracted PDF metadata.
+The live instance runs at `krr.cs.vu.nl/ceur-beta/workshops/`. The screenshots below are from a local run with a workshop I made up.
 
-- Developed features to double-check data accuracy, such as verifying if licensing agreements are uploaded and hand-signed.
-- Developed reaordering sessions within a workshop as well as papers within a session.
-- Integrated the OpenReview API to retrieve and parse metadata for publications. Implemented a mechanism to scrape unique OpenReview IDs for batch publications.
-- Added a workflow for users to search and select existing workshops on OpenReview, pre-populating workshop metadata and author information in the UI. This minimized manual input errors and streamlined the process for users familiar with OpenReview.
-- Implemented a structured JSON output for both organizers and authors to capture detailed metadata.
-- Designed a process to convert JSON metadata into HTML adhering to the structure used on the [CEUR-WS](https://ceur-ws.org/) website. Implemented a static page generator to render HTML files on the Apache server, allowing easy access and publication of workshop information.
+## Two links, no accounts
 
+There is no login anywhere. Each workshop row carries two UUID tokens: `secret_token` for the editors' overview page and `author_upload_secret_token` for the author form. The overview page hands both out with copy-to-clipboard buttons, and every author given the second link gets their own submission, which appears in the editors' list immediately. Each paper then gets a third token, so an author can come back and edit their own entry without seeing anyone else's.
+
+## Describing the workshop
+
+<img src="/ceur-ws-prototype/create-workshop.png" alt="Create Workshop Volume form filled in with titles, acronym, dates, paper counts, an uploaded editor agreement, two sessions and two editors" />
+
+The create form is one workshop form plus four formsets — editors, sessions, prefaces and papers — with rows added in place by jQuery. Language is a dropdown over 70 ISO 639-2 codes loaded from a JSON file; countries come from `django-countries`, flags included. The form refuses arithmetic that CEUR would reject later: accepted papers cannot exceed submitted, and regular plus short must equal accepted.
+
+## What an author does
+
+<img src="/ceur-ws-prototype/author-upload.png" alt="Submit Paper form with a paper title, a session dropdown, an uploaded PDF and two authors with their affiliations and emails" />
+
+The author fills in a title, picks a session and uploads a PDF. PyPDF2 counts the pages so nobody has to type them. The app then renders the CEUR author agreement — a third-party and a non-third-party variant — with the paper title, page count, author list and editors already filled in.
+
+<img src="/ceur-ws-prototype/author-agreement.png" alt="Generated CEUR-WS author agreement showing the paper title, twelve pages, both authors with affiliations, the CC BY 4.0 terms and a handwritten-signature line" />
+
+<img src="/ceur-ws-prototype/author-review.png" alt="Confirmation step offering the agreement form for download, with the signed file uploaded back and the Completed box ticked" />
+
+The author downloads it, signs it by hand, uploads it back and ticks *Completed* — which is what turns their paper green on the editors' page.
+
+## Ordering the volume
+
+<img src="/ceur-ws-prototype/edit-papers.png" alt="Edit Papers panel with drag handles, papers nested under Session 1 and Session 2, and an empty Unassigned Papers list" />
+
+Editors drag papers between sessions and into the order they should be printed in. SortableJS posts the arrangement back as JSON and the view rewrites each paper's order and session.
+
+## Producing the volume
+
+<img src="/ceur-ws-prototype/generated-volume.png" alt="Generated CEUR-WS volume page with the ISSN masthead, CC BY notice, URN, editor affiliations and a table of contents listing each paper with authors and page counts" />
+
+Submitting writes a JSON file of `CEUR*` keys with an MD5 checksum over them, zips the papers and the agreements, and renders `index.html` in the house style of ceur-ws.org — masthead, URN, editor footnotes, table of contents by session. That page is the deliverable. CEUR fills in the volume number, URN and licence afterwards through the Django admin.
+
+<img src="/ceur-ws-prototype/admin.png" alt="Django admin change form for the workshop, showing the editor-supplied fields plus the empty volume number, submission date, licence and URN reserved for CEUR" />
+
+## How it ships
+
+Plain Django 5.0 on SQLite, installed from the repo's `setup.py` into a virtualenv and served under a `/ceur-beta/` URL prefix. No Docker and no CI: `pip install .`, `manage.py migrate`, `manage.py runserver`.
+
+## What I built
+
+I wrote the author upload path end to end — the paper form, the page-count extraction, the agreement generation and the per-paper edit link — plus the OpenReview integration that reads a venue's submissions and pre-fills the workshop from them, the JSON metadata layer, and the generator that turns that JSON into the CEUR-WS volume page.
