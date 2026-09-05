@@ -1,5 +1,11 @@
 import { Navigation } from "../components/nav";
 
+export const metadata = {
+	title: "About",
+	description: "AI Engineer in Amsterdam. MSc in Artificial Intelligence at VU Amsterdam.",
+};
+
+
 export default function About() {
 	return (
 		<div className="bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0 min-h-screen">
@@ -14,6 +20,9 @@ export default function About() {
 					<div className="space-y-4 text-zinc-400 leading-relaxed">
 						<p>
 							I'm Filip, an AI Engineer based in Amsterdam. I recently completed my MSc in Artificial Intelligence at VU Amsterdam, where my research focused on simulating persuasion dynamics using LLMs — work that was published at LREC 2026 in Palma de Mallorca.
+						</p>
+						<p>
+							I also co-author <a href="https://pypi.org/project/c4fairness/0.1.2" target="_blank" rel="noopener noreferrer" className="text-zinc-200 underline underline-offset-4 decoration-zinc-700 hover:text-white duration-200">c4fairness</a>, an open-source Python package for locating prediction-error disparities in machine learning models — built at VU Amsterdam, co-funded by University of Twente, and presented as a poster at VPH 2026 in Milan.
 						</p>
 						<p>
 							My background sits at the intersection of NLP, agent-based systems, and full-stack engineering. I enjoy building things that are both technically rigorous and actually useful.

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Github, Linkedin } from "lucide-react";
+import { Github, GraduationCap, Linkedin, BookMarked } from "lucide-react";
 import { Navigation } from "../components/nav";
 import { useState, useEffect, useRef } from "react";
 
@@ -179,7 +179,7 @@ export default function Contact() {
 								</a>
 							</div>
 
-							<div className="border-t border-zinc-800 mt-6 pt-6 flex justify-center gap-6">
+							<div className="border-t border-zinc-800 mt-6 pt-6 flex flex-wrap justify-center gap-x-6 gap-y-3">
 								<Link
 									href="https://www.linkedin.com/in/filip-muntean-54bb247b/"
 									target="_blank"
@@ -197,6 +197,24 @@ export default function Contact() {
 								>
 									<Github size={14} />
 									GitHub
+								</Link>
+								<Link
+									href="https://scholar.google.com/citations?user=rcNGarMAAAAJ"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 duration-300"
+								>
+									<GraduationCap size={14} />
+									Scholar
+								</Link>
+								<Link
+									href="https://orcid.org/0009-0005-5999-6732"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 duration-300"
+								>
+									<BookMarked size={14} />
+									ORCID
 								</Link>
 							</div>
 						</>

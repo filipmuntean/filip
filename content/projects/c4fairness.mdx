@@ -1,0 +1,80 @@
+---
+title: Clustering 4 Fairness
+description: Open-source Python package for auditing where a model's errors fall unevenly
+date: 2026-08-15
+repository: emma-ba/Clustering_4_Fairness
+url: https://filipmuntean.github.io/c4fairness_website/
+published: true
+---
+
+**c4fairness** is an open-source Python package that finds where a model's errors fall unevenly. It clusters the rows of a model's test set and reports how prediction-error disparities and sensitive-attribute composition vary across the discovered clusters — surfacing under-served subgroups **without pre-specifying the protected group**. Works for binary, multi-class, and regression tasks.
+
+Built at Vrije Universiteit Amsterdam (VU), co-funded by University of Twente (UT).
+
+- 📦 **PyPI**: [pypi.org/project/c4fairness](https://pypi.org/project/c4fairness/0.1.2)
+- 🌐 **Website**: [filipmuntean.github.io/c4fairness_website](https://filipmuntean.github.io/c4fairness_website/)
+- 💻 **Source**: [github.com/emma-ba/Clustering_4_Fairness](https://github.com/emma-ba/Clustering_4_Fairness)
+
+## Install
+
+```bash
+pip install c4fairness              # from PyPI
+pip install "c4fairness[web]"       # + the Gradio web UI
+pip install "c4fairness[r]"         # + rpy2, for the exact r×c Fisher test
+```
+
+Python 3.10+. The import name is `c4fairness`; the CLI command is `c4fairness`.
+
+## Quick start
+
+```bash
+c4fairness --data_path docs/datasets/compas_audit.csv \
+    --regular_cols age,priors_count \
+    --sensitive_cols sex,race,age --continuous_sensitive_cols age \
+    --error_col errors --error_type binary \
+    --algorithm kmeans --n_clusters 4 --seed 42
+```
+
+This clusters the test set on `age`/`priors_count` (plus the sensitive columns), then writes a per-cluster recap and heatmap showing each cluster's error rate and its sex/race/age make-up. String sensitive columns are one-hot encoded automatically.
+
+## What you get
+
+For each discovered cluster the tool reports its size, its error magnitude or rate, the gap against the rest of the test set with a significance test, and the composition of every sensitive attribute you passed in — so a disparity localised to a pocket of the feature space stays visible instead of being flattened by a single per-group average.
+
+Output lands as heatmaps and CSVs: a **detailed recap** with one row per cluster, and — in experiment mode — an **overview** with one row per feature-group condition, so you can check whether something survives the choice of what to cluster on.
+
+## ✨ Features
+
+### 🔍 Cluster-level fairness auditing
+- No protected group needs to be specified up front — disparities are discovered, not queried.
+- Per-cluster **error gap vs. the rest**, plus omnibus **separability** tests.
+- Supports **binary** (raw, FPR, FNR, precision), **multi-class** (per-class, accuracy, confusion cell, one-hot, classwise), and **regression** errors.
+
+### 🧮 Six clustering algorithms
+KMeans, BisectingKMeans, KMedoids, KPrototypes, DBSCAN, HDBSCAN — with Euclidean, Manhattan, or **Gower** distance for mixed numeric/categorical data. Fixed `k`, or automatic selection over a range using a silhouette / chi-square / composite objective with tunable weights.
+
+### 📊 Statistical rigour
+- Fisher, chi-square, Mann-Whitney, and ANOVA tests picked automatically per error and feature type.
+- Optional **exact r×c Fisher–Freeman–Halton** via R's `fisher.test` (through `rpy2`), with an automatic scipy fallback when R isn't present.
+- Benjamini-Hochberg correction across sensitive features in experiment mode.
+
+### 🧪 Experiment mode
+Reruns the audit for every combination of feature groups (regular / sensitive / error), so you can check whether a finding survives the choice of what to cluster on. Multi-seed runs supported.
+
+### 🖥️ Gradio web UI
+`c4fairness-web` wraps the CLI in a browser app: upload a CSV, assign column roles, run single audits or a full sweep, and get heatmaps, an overview table, and downloadable CSVs — with a streaming run log.
+
+### 🎨 Output
+Recap and overview heatmaps colour-coded by family (size / error / sensitive composition, with p-values shaded by significance), PCA / t-SNE / MDS projections, per-attribute composition plots, and CSVs for every table.
+
+## Careful defaults
+
+Binary one-hot columns are kept out of `StandardScaler` — scaling them distorts Euclidean distances, inflating the weight of rarer categories regardless of their importance. For `kprototypes`, where silhouette can't be computed directly on a mixed distance, the full pairwise distance matrix is precomputed with the same distance the algorithm fits (squared Euclidean + Hamming, weighted by the fitted gamma) and passed to `silhouette_score(metric='precomputed')`.
+
+## Datasets
+
+Two audit-ready extracts ship with the repo — a COMPAS classification extract (5050 rows; sex, race, age) and a UCI Student Performance regression extract (670 rows; sex, mother's education, age). The package was also evaluated on Open University (OULAD), German Credit, and Communities & Crime.
+
+## Presented at
+
+Poster presented at **VPH 2026** in Milan, Italy.
