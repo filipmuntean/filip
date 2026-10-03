@@ -6,8 +6,14 @@ export const metadata = {
 	description: "Papers, talks and presentations by Filip Muntean.",
 };
 
-
 const papers = [
+	{
+		title: "c4fairness",
+		description: "A Python Package for Clustering-based Fairness Analysis",
+		venue: "BNAIC/BeNeLearn 2026, Demo track",
+		date: "29/09/2026",
+		url: "https://openreview.net/forum?id=OXTzc01W72",
+	},
 	{
 		title: "Green Bots versus Red Bots",
 		description:
